@@ -9,17 +9,32 @@ import {
 } from "react-native";
 import { Button } from "../components/Button";
 import { SkillCard } from "../components/SkillCard";
-export const Nome = "Matheus";
 
+interface ISkillData {
+  id: string;
+  name: string;
+}
+
+export const Nome = "Matheus";
 export function Home() {
-  const [newSkill, setNewSkill] = useState("");
-  const [mySkills, setMySkills] = useState([]);
+  const [newSkill, setNewSkill] = useState('');
+  const [mySkills, setMySkills] = useState<ISkillData[]>([]);
   const [greetings, setGreeting] = useState('');
 
   function handleAddNewSkill() {
-    setMySkills((oldState) => [...oldState, newSkill]);
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill
+    }
+
+    setMySkills((oldState) => [...oldState, data]);
   }
 
+  function handleRemoveSkill(id: string) {
+    setMySkills((oldState) => oldState.filter(skill =>
+      skill.id !== id
+    ))
+  }
   useEffect(() => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) 
@@ -29,7 +44,7 @@ export function Home() {
     else
       setGreeting("Good night")
   }, [])
-
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome {Nome}</Text>
@@ -42,18 +57,22 @@ export function Home() {
         placeholderTextColor="#555"
         onChangeText={setNewSkill}
       />
-      <Button onPress={handleAddNewSkill} />
+      <Button onPress={handleAddNewSkill} title={'Add'}/>
       <Text style={[styles.title, { marginVertical: 40 }]}>My Skills</Text>
       <FlatList
         data={mySkills}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <SkillCard skill={item} />}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => 
+          <SkillCard 
+            onPress={() => handleRemoveSkill(item.id)}
+            skill={item.name} />
+        }
       />
     </View>
   );
 }
 
-const styles = new StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#121015",
