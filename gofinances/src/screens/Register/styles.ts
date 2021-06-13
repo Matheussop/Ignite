@@ -7,7 +7,7 @@ export const Container = styled.View`
 `;
 export const Header = styled.View`
   background-color: ${({ theme }) => theme.colors.primary};
-  height: ${RFValue(113)}px;
+  height: ${RFValue(90)}px;
   width: 100%;
 
   align-items: center;
