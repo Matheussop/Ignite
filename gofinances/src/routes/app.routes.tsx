@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Dashboard } from '../screens/Dashboard';
 import { Register } from '../screens/Register';
@@ -8,7 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Platform } from 'react-native';
 
 const { Navigator, Screen } = createBottomTabNavigator();
- export default function AppRoutes() {
+ export function AppRoutes() {
   const theme = useTheme();
   return (
       <Navigator
