@@ -26,13 +26,16 @@ interface CarData{
    thumbnail: string;
 }
 
-interface Props { 
+import { RectButtonProps } from "react-native-gesture-handler"
+
+
+interface Props extends RectButtonProps{ 
    data: CarData;
 }
 
-export function Car({ data }: Props) {
+export function Car({ data, ...rest }: Props) {
    return (
-     <Container>
+     <Container {...rest}>
         <Details>
             <Brand>{data.brand}</Brand>
             <Name>{data.name}</Name>

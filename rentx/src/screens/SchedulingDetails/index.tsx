@@ -41,12 +41,24 @@ import {
 } from "./styles";
 import { useTheme } from "styled-components";
 import { RFValue } from "react-native-responsive-fontsize";
+import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from "react-native";
 
 export function SchedulingDetails() {
   const theme = useTheme();
+  const navigation = useNavigation();
+
+  function handleConfirmRental(){
+    navigation.navigate('SchedulingComplete');
+  }
 
   return (
     <Container>
+      <StatusBar 
+        backgroundColor="transparent"
+        translucent
+        barStyle="dark-content"
+      /> 
       <Header>
         <BackButton onPress={() => {}} />
       </Header>
@@ -108,7 +120,7 @@ export function SchedulingDetails() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" />
+        <Button title="Alugar Agora" onPress={handleConfirmRental} color={theme.colors.success}/>
       </Footer>
     </Container>
   );

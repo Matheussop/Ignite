@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from 'styled-components';
 
 import {
    Container,
@@ -12,9 +13,11 @@ interface Props {
 }
 
 export function Button({title, color, onPress, ...rest}: Props) {
-   return (
-     <Container {...rest} color={color}>
-       <Title>{title}</Title>
-     </Container>
-   );
+  const theme = useTheme();
+
+  return (
+    <Container onPress={onPress} color={color ? color: theme.colors.main}>
+      <Title>{title}</Title>
+    </Container>
+  );
 }
