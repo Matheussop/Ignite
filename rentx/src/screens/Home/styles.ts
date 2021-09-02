@@ -1,6 +1,9 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 import { FlatList } from 'react-native'
+import { ICarDTO } from '../../dtos/CarDTO';
+import { RectButton } from 'react-native-gesture-handler';
+
 
 export const Container = styled.View`
   flex: 1;
@@ -32,10 +35,9 @@ export const HeaderContent = styled.View`
   padding: 32px 24px;
 `
 
-export const CarList = styled(FlatList).attrs({
+export const CarList = styled(FlatList as new () => FlatList<ICarDTO>).attrs({
   contentContainerStyle:{
     padding: 24
   },
   showsVerticalScrollIndicator: false
-})`
-`
+})``
