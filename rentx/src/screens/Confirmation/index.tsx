@@ -12,16 +12,26 @@ import {
    Footer
 } from './styles';
 import { ConfirmButton } from '../../components/ConfirmButton';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-export function SchedulingComplete() {
+interface Props{
+  title: string;
+  message: string;
+  nextScreen: string;
+}
+
+export function Confirmation() {
 
   const {width} = useWindowDimensions();
   
   const navigation = useNavigation();
 
+  const route = useRoute();
+
+  const {title, message, nextScreen } = route.params as Props;
+
   function handleOkRental(){
-    navigation.navigate('Home');
+    navigation.navigate(nextScreen);
   }
 
   return (
@@ -34,9 +44,9 @@ export function SchedulingComplete() {
       <BrandSvg width={width}/>
       <Content>
         <DoneSvg width={80} height={80} />
-        <Title>Carro alugado!</Title>
+        <Title>{title}</Title>
 
-        <Menssage>Agora vocé so precisa {"\n"} ir até a concessionária da RENTX  {"\n"} pegar o seu automóvel. </Menssage>
+        <Menssage>{message}</Menssage>
 
         <Footer>
           <ConfirmButton title='Ok' onPress={handleOkRental}/>
