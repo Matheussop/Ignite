@@ -19,7 +19,7 @@ interface Props extends TextInputProps {
 export function PasswordInput({iconName,value, ...rest}: Props) {
   const theme = useTheme();
 
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
 
   const [isFilled,setIsFilled] = useState(false);
   const [isFocused,setIsFocused] = useState(false);
@@ -47,6 +47,7 @@ export function PasswordInput({iconName,value, ...rest}: Props) {
       <InputText {...rest}
         onFocus={handleInputFocused}
         onBlur={handleInputBlur}
+        autoCorrect={false}
         secureTextEntry={isPasswordVisible}
         isFocused={isFocused}/>
 

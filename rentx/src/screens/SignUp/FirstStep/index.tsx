@@ -22,7 +22,7 @@ export function FirstStep() {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
 
   function handleBack(){
     navigation.goBack();
@@ -31,15 +31,14 @@ export function FirstStep() {
   async function handleNextStep(){
     try{
       const schema = Yup.object().shape({
-        username: Yup.string()
+        name: Yup.string()
         .required('O nome é obrigatório'),
         email: Yup.string()
           .required('Email Obrigatório')
           .email('Digite um e-mail válido'),
-       
       })
 
-      const data = { username, email }
+      const data = { name, email }
       await schema.validate(data);
       
       navigation.navigate('SignUpSecondStep', {user: data});
@@ -79,8 +78,8 @@ export function FirstStep() {
             placeholder='Nome'
             autoCorrect={false}
             autoCapitalize="sentences"
-            onChangeText={setUsername}
-            value={username}
+            onChangeText={setName}
+            value={name}
           />
 
           <Input 

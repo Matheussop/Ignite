@@ -42,6 +42,7 @@ import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 import { getPlatFormDate } from '../../utils/getPlatFormDate'
 import { format } from 'date-fns';
 import api from "../../services/api";
+import { useNetInfo } from "@react-native-community/netinfo";
 interface Params{
   car: ICarDTO;
   dates: string[];
@@ -57,33 +58,26 @@ export function SchedulingDetails() {
   const navigation = useNavigation();
   const [rentalPeriod, setRentalPeriod] = useState<IRentalPeriod>({} as IRentalPeriod)
   const [loading, setLoading] = useState(false);
+  const netInfo = useNetInfo();
 
   const route = useRoute();
   const { car, dates } = route.params as Params;
+  const [carUpdated, setCarUptdated] = useState<ICarDTO>({} as ICarDTO)
 
-  const rentTotal = Number(dates.length * car.rent.price);
+
+  const rentTotal = Number(dates.length * car.price);
 
   async function handleConfirmRental(){
     setLoading(true);
-    const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
 
-    const unavailable_dates = [
-      ...schedulesByCar.data.unavailable_dates,
-      ...dates,
-    ];
-
-    await api.post(`schedules_byuser`,{
+    await api.post(`rentals`,{
       user_id: 1,
-      car,
-      startDate: format(getPlatFormDate(new Date(dates[0])), 'dd/MM/yyyy'),
-      endDate: format(getPlatFormDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy'),
+      car_id: car.id,
+      start_date: new Date(dates[0]),
+      end_date: new Date(dates[dates.length - 1]),
+      total: rentTotal,
     })
-
-
-    api.put(`/schedules_bycars/${car.id}`, {
-      id: car.id,
-      unavailable_dates
-    }).then(() => 
+    .then(() => 
       {
       navigation.navigate('Confirmation', {
         title: 'Carro alugado!',
@@ -108,6 +102,18 @@ export function SchedulingDetails() {
       endFormatted: format(getPlatFormDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy'),
     })
   },[])
+
+  useEffect(() => {
+    async function fetchCarUpdate(){
+      const response = await api.get(`/cars/${car.id}`);
+      setCarUptdated(response.data);
+    }
+
+    if(netInfo.isConnected === true){
+      fetchCarUpdate();
+    }
+  }, [netInfo.isConnected]);
+
   return (
     <Container>
       <StatusBar 
@@ -119,9 +125,7 @@ export function SchedulingDetails() {
         <BackButton onPress={handleBack} />
       </Header>
       <CarImages>
-        <ImageSlider
-          imagesUrl={car.photos}
-        />
+        <ImageSlider imagesUrl={!!carUpdated.photos ? carUpdated.photos : [{id: car.thumbnail, photo: car.thumbnail}]} />
       </CarImages>
       <Content>
         <Details>
@@ -130,16 +134,22 @@ export function SchedulingDetails() {
             <Name>{car.name}</Name>
           </Description>
           <Rent>
-            <Period>{car.rent.period}</Period>
-            <Price>{car.rent.price}</Price>
+            <Period>{car.period}</Period>
+            <Price>{car.price}</Price>
           </Rent>
         </Details>
         <Accessories>
-          {
-            car.accessories.map((accessory) => (
-              <Accessory name={accessory.name} key={accessory.type} icon={getAccessoryIcon(accessory.type)}/>
-            ))
-          }
+        { carUpdated.accessories &&
+          <Accessories>
+            {carUpdated.accessories.map((accessory) => (
+              <Accessory
+                name={accessory.name}
+                key={accessory.type}
+                icon={getAccessoryIcon(accessory.type)}
+              />
+            ))}
+          </Accessories>
+        }
         </Accessories>
         <RentalPeriod>
           <CalendaIcon>
@@ -166,7 +176,7 @@ export function SchedulingDetails() {
         <RetalPrice>
         <RentalPriceLabel>TOTAL</RentalPriceLabel>
         <RentalPriceDetails>
-          <RentalPriceQuota>R$ {car.rent.price} x{dates.length} diárias</RentalPriceQuota>
+          <RentalPriceQuota>R$ {car.price} x{dates.length} diárias</RentalPriceQuota>
           <RentalPriceTotal>R$ {rentTotal}</RentalPriceTotal>
         </RentalPriceDetails>
       </RetalPrice>

@@ -23,7 +23,6 @@ export function SignIn(){
       setIsLoading(true);
       return await signInWithGoogle();
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
       Alert.alert('Não foi possivel conectar a conta Google');
     } 

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { StatusBar, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import React, { useState, useEffect} from 'react';
+import { StatusBar, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert, BackHandler } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
@@ -15,10 +15,14 @@ import {
    Form
 } from './styles';
 import { useNavigation } from '@react-navigation/core';
+import { useAuth } from '../../hooks/auth';
+import { database } from '../../database/index'
+
 
 export function SignIn() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const {signIn} = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,8 +38,7 @@ export function SignIn() {
       })
       await schema.validate({email, password});
 
-      Alert.alert('tudo certo')
-      // TODO Fazer login
+      signIn({email, password});
     }catch(error){
       if(error instanceof Yup.ValidationError){
         Alert.alert('Opa, alguma informação esta errada', error.message)
@@ -50,6 +53,13 @@ export function SignIn() {
   function handleSignUp(){
     navigation.navigate('SignUpFirstStep');
   }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true
+    })
+  },[])
+
 
   return (
     <KeyboardAvoidingView behavior="position" enabled>

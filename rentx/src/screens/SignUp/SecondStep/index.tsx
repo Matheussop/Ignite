@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { StatusBar, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { Button } from '../../../components/Button';
-import { Input } from '../../../components/Input';
 import * as Yup from 'yup';
 
 import {
@@ -19,10 +18,11 @@ import { BackButton } from '../../../components/BackButton';
 import { Bullet } from '../../../components/Bullet';
 import { PasswordInput } from '../../../components/PasswordInput';
 import { useTheme } from 'styled-components';
+import api from '../../../services/api';
 
 interface Params{ 
   user: {
-    username: string;
+    name: string;
     email: string;
   }
 }
@@ -53,16 +53,24 @@ export function SecondStep() {
       })
       await schema.validate({password, confirmPassword});
       
-      navigation.navigate('Confirmation', {
-        title: 'Conta criada!',
-        message: 'Agora é só fazer login\ne aproveitar.', 
-        nextScreen: 'SignIn'
+      await api.post('/users', {
+        name: user.name,
+        email: user.email,
+        password: password,
+        driver_license:'',
+      }).then(() => {
+        navigation.navigate('Confirmation', {
+          title: 'Conta criada!',
+          message: 'Agora é só fazer login\ne aproveitar.', 
+          nextScreen: 'SignIn'
+        })  
       })
-      //Enciar para api e concluir
+
     }catch(error){
       if(error instanceof Yup.ValidationError){
         Alert.alert('Opa, alguma informação esta errada', error.message)
       }else{
+        console.log(error)
         Alert.alert('Error, na autenticação',
                     'Ocorreu um erro ao fazer cadastro, verifique as informações inseridas.')
       }

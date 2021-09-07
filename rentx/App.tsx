@@ -17,6 +17,12 @@ import{
 } from '@expo-google-fonts/archivo'
 import AppLoading from 'expo-app-loading';
 import { Routes } from './src/routes';
+import { AppProvider } from './src/hooks';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+ 'Non-serializable values were found in the navigation state',
+]);
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -33,7 +39,9 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Routes/>
+      <AppProvider>
+        <Routes/>
+      </AppProvider>
     </ThemeProvider>
   );
 }
