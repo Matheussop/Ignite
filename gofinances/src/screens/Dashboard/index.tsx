@@ -91,6 +91,7 @@ export function Dashboard() {
           currency: "BRL",
         });
 
+        console.log(item.date)
         const date = Intl.DateTimeFormat("pt-BR", {
           day: "2-digit",
           month: "2-digit",

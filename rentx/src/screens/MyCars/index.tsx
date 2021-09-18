@@ -56,10 +56,12 @@ export function MyCars() {
         setCars(dataFormatted);
       }catch(err){
         Alert.alert('Error ao recuperar a lista de agendamentos')
+        console.log(err)
       }finally{
         setLoading(false);
       }
     }
+    if(screenIsFocus)
     fetchCars();
   }, [screenIsFocus])
 
