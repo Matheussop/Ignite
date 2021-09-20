@@ -43,7 +43,6 @@ describe("Create category", () => {
       };
 
       const authenticatedResponse = await authenticateUserUseCase.execute(user);
-      console.log(authenticatedResponse);
     }).rejects.toBeInstanceOf(AppError);
   });
 
