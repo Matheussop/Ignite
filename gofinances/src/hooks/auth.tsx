@@ -31,25 +31,31 @@ function AuthProvider({ children }: AuthProviderProps){
 
   async function signInWithGoogle(){
     try{
-      const result = await Google.logInAsync({
-        iosClientId: '541272048092-u4k6v5m3vfl24fr2ru51l0buf5ldssd3.apps.googleusercontent.com',
-        androidClientId: '541272048092-psqjkvf8e6eo8annebs9khqgvmde3jpe.apps.googleusercontent.com',
-        scopes: ['profile','email']
-      })
+      // const result = await Google.logInAsync({
+      //   iosClientId: '541272048092-u4k6v5m3vfl24fr2ru51l0buf5ldssd3.apps.googleusercontent.com',
+      //   androidClientId: '541272048092-psqjkvf8e6eo8annebs9khqgvmde3jpe.apps.googleusercontent.com',
+      //   scopes: ['profile','email']
+      // })
 
-      if(result.type === 'success'){
+      //if(result.type === 'success'){
         const userLogged = {
-          id: String(result.user.id),
-          email: String(result.user.email)!,
-          name: String(result.user.name)!,
-          photo: String(result.user.photoUrl!)
+          id: '1',
+          email: '@',
+          name: 'Matheus',
+          // photo: String(result.user.photoUrl!)
         };
+        // const userLogged = {
+        //   id: String(result.user.id),
+        //   email: String(result.user.email)!,
+        //   name: String(result.user.name)!,
+        //   photo: String(result.user.photoUrl!)
+        // };
 
         setUser(userLogged)
         await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged))
-      }
+      //}
 
-    }catch(error){
+    }catch(error: any | undefined ){
       throw new Error(error)
     }
   } 
